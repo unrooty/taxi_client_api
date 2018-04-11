@@ -5,6 +5,10 @@ class OrdersPolicy
     @model = model
   end
 
+  def index?
+    @user
+  end
+
   def access_granted?
     @user && (@user.id == @model.user_id)
   end

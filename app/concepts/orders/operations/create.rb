@@ -1,15 +1,9 @@
 # frozen_string_literal: true
 
 class Order::Create < Trailblazer::Operation
-  class Present < Trailblazer::Operation
-    step Model(Order, :new)
+  step Model(Order, :new)
 
-    step Contract::Build(constant: Order::Contract::Create)
-  end
-
-  step Nested(Present)
-
-  success :bring_number_to_right_format
+  step Contract::Build(constant: Order::Contract::Create)
 
   step Contract::Validate(key: :order)
 
@@ -25,10 +19,6 @@ class Order::Create < Trailblazer::Operation
 
   private
 
-  def bring_number_to_right_format(_options, params:, **)
-    params['order']['client_phone'].gsub!(/[^\d]/, '')
-  end
-
   def check_user_presence(options, headers:, **)
     if headers['Access-Token'].present?
       check_token(headers['Access-Token'], options)
@@ -39,7 +29,7 @@ class Order::Create < Trailblazer::Operation
   end
 
   def check_token(token, options)
-    payload = JsonWebToken.decode(token)
+    payload = Authentication::JsonWebToken.decode(token)
     if payload && payload['user']
       @current_user = User[payload['user']]
     else

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class Order::Delete < Trailblazer::Operation
-  step Model(Order, :[])
-
   step Policy::Pundit(OrdersPolicy, :access_granted?)
+
+  step Model(Order, :[])
 
   step Wrap(SequelTransaction) {
     success :unassign_car!

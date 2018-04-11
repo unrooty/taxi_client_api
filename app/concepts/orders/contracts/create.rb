@@ -6,5 +6,12 @@ module Order::Contract
     property :client_name
     property :client_phone
     #:property end
+
+    validates :start_point, :end_point, :client_name, presence: true
+    validates :client_phone, presence: true, length: { is: 9 }
+
+    def client_phone=(value)
+      super(value.gsub(/[^\d]/, ''))
+    end
   end
 end

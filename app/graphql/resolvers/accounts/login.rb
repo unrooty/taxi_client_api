@@ -11,8 +11,7 @@ module Resolvers
       type Types::TokenType
 
       def call(_obj, args, _ctx)
-        result = Account::Login.call(params: args.to_h)
-        handle(result)
+        handle(Account::Login.call(params: args.to_h))
       end
     end
   end

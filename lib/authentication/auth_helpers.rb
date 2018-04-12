@@ -18,12 +18,12 @@ module Authentication
       if request.headers['Access-Token'].present?
         return @token = request.headers['Access-Token']
       end
-      error!('Token absent', 422)
+      raise Handler::RequestError.new('Token absent', 422)
     end
 
     def token_expired?
       token = JsonWebToken.decode(@token)
-      return error!('Token invalid', 401) unless token
+      raise Handler::RequestError.new('Token invalid', 401) unless token
       @user = User[token['user']]
     end
 
@@ -31,7 +31,7 @@ module Authentication
       return @user if @user.active
       error!('Account deactivated!', 403)
       if !@user.confirmed_at || (@user.confirmation_sent_at + 12.hours < Time.now)
-        error!('Account not confirmed!', 403)
+        raise Handler::RequestError.new('Account not confirmed!', 403)
       end
     end
   end

@@ -1,12 +1,17 @@
 # frozen_string_literal: true
 
-class Home::FeedbackMail < Trailblazer::Operation
+class Feedback::Send < Trailblazer::Operation
   step Model(Feedback, :new)
 
-  step Contract::Build(constant: Feedback::Contract::FeedbackMailSend)
+  step Contract::Build(constant: Feedback::Contract::Send)
+  step :hi
+  def hi(options, params:, **)
+    p params
+    # p '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+  end
+  step Contract::Validate(key: :feedback)
 
   step Wrap(SequelTransaction) {
-    step Contract::Validate(key: :feedback)
 
     step Contract::Persist()
 

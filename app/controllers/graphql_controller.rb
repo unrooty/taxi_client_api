@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 class GraphqlController < ApplicationController
+  include Authentication::AuthHelpers
   def execute
     variables = ensure_hash(params[:variables])
     query = params[:query]
@@ -6,8 +9,10 @@ class GraphqlController < ApplicationController
     context = {
       token: request.headers['HTTP_ACCESS_TOKEN']
     }
-    result = TaxiClientApiSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
-    render json: result, status: 200
+    result = TaxiClientApiSchema.execute(query, variables: variables,
+                                                context: context,
+                                                operation_name: operation_name)
+    render json: result
   end
 
   private

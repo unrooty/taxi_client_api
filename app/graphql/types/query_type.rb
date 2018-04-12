@@ -6,4 +6,5 @@ Types::QueryType = GraphQL::ObjectType.define do
   field :affiliates, function: Resolvers::Affiliates::Index.new
   field :affiliate, function: Resolvers::Affiliates::Show.new
   field :orders, function: Resolvers::Orders::Index.new
+  field :order, function: Resolvers::Orders::Show.new
 end

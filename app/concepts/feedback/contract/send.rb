@@ -1,5 +1,5 @@
 module Feedback::Contract
-  class FeedbackMailSend < Reform::Form
+  class Send < Reform::Form
     property :name
     property :email
     property :message

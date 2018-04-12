@@ -5,8 +5,7 @@ module Resolvers
       type !types[Types::AffiliateType]
 
       def call(_obj, _args, _ctx)
-        result = Affiliate::Index.call()
-        handle(result)
+        handle(Affiliate::Index.call)
       end
     end
   end

@@ -2,15 +2,16 @@
 
 module Resolvers
   module Orders
-    class Create < BaseResolver
+    class Update < BaseResolver
 
+      argument :id, !types.ID
       argument :order, Inputs::OrderInput
 
       type Types::OrderType
 
       def call(_obj, args, ctx)
-        handle(Order::Create.call(params: { order: args[:order].to_h },
-                                  headers: ctx))
+        handle(Order::Update.call(params: args.to_h,
+                                  current_user: current_user))
       end
     end
   end

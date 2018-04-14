@@ -13,8 +13,13 @@ module Account
       property :city
       property :address
 
-      validates :password, confirmation: true
-      validates :email, uniqueness: true
+      validates :phone, presence: true, length: { is: 9 }
+      validates :first_name, :last_name, presence: true
+      validates :password, presence: true, confirmation: true,
+                           length: { minimum: 8 }, format: /[A-Za-zА-Яа-я-]/
+      validates :password_confirmation, presence: true
+      validates :email, uniqueness: true, presence: true,
+                        format: /\A[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+\z/
 
       def phone=(value)
         super(value.gsub(/[^\d]/, ''))

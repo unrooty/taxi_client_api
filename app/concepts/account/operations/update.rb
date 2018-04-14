@@ -9,12 +9,12 @@ module Account
     step :current_password_valid?
     failure :current_password_invalid!, fail_fast: true
 
-    step :User_active?
-    failure :User_deactivated!
+    step :user_active?
+    failure :user_deactivated!
 
     step self::Contract::Build(constant: Account::Contract::Update)
 
-    step self::Contract::Validate(key: :user)
+    step self::Contract::Validate(key: :account)
 
     step self::Contract::Persist()
 
@@ -25,7 +25,8 @@ module Account
     end
 
     def current_password_valid?(_options, model:, params:, **)
-      model.valid_password?(params['user']['current_password'])
+      p params
+      model.valid_password?(params[:account]['current_password'])
     end
 
     def current_password_invalid!(options, *)

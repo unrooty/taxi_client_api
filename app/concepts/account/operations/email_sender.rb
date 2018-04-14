@@ -4,7 +4,7 @@ module Account
   class EmailSender < Trailblazer::Operation
     class FindUser < Trailblazer::Operation
       step :find_user
-      failure :user_not_exists!
+      failure :user_not_exists!, fail_fast: true
 
       private
 
@@ -24,18 +24,27 @@ module Account
       step Nested(Account::EmailSender::FindUser)
 
       step :send_email
+      failure :user_active!
 
       def send_email(_options, model:, **)
-        UserMailer.activation_email(model).deliver
+        UserMailer.activation_email(model).deliver unless model.active
+      end
+
+      def user_active!(options, *)
+        options[:errors] = {
+          message: 'User already active!',
+          status: 422
+        }
       end
     end
 
-    class PasswordReset < Trailblazer::Operation
+    class ResetPassword < Trailblazer::Operation
       step Nested(Account::EmailSender::FindUser)
 
       step :send_email
 
       def send_email(_options, model:, **)
+        p model
         UserMailer.reset_password_email(model).deliver
         model.update(reset_password_sent_at: Time.now)
       end

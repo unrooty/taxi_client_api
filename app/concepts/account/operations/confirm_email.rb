@@ -3,8 +3,9 @@
 module Account
   class ConfirmEmail < Trailblazer::Operation
     step Wrap(SequelTransaction) {
+
       step :model!
-      failure :user_not_found!
+      failure :token_invalid!
 
       step :confirm_email
     }
@@ -12,10 +13,10 @@ module Account
     private
 
     def model!(options, params:, **)
-      options[:model] = User[confirmation_token: params[:confirmation_token]]
+      options[:model] = User[confirmation_token: params['confirmation_token']]
     end
 
-    def token_invalid(options, *)
+    def token_invalid!(options, *)
       options[:errors] = {
         message: 'Confirmation token invalid.',
         status: 422

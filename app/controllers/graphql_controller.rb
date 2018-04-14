@@ -7,7 +7,7 @@ class GraphqlController < ApplicationController
     query = params[:query]
     operation_name = params[:operationName]
     context = {
-      token: request.headers['HTTP_ACCESS_TOKEN']
+      headers: request.headers
     }
     result = TaxiClientApiSchema.execute(query, variables: variables,
                                                 context: context,

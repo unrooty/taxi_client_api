@@ -3,19 +3,23 @@
 module Handler
   # MATCHERS = []
   def handle(result)
-    return result[:model] if result.success?
+    if result.success?
+      @model = result[:model]
+      return yield if block_given?
+      return @model
+    end
     return failure(result) if result.failure?
-    error!('Something went wrong! Please, try again or contact the developer!')
+    error('Something went wrong! Please, try again or contact the developer!')
   end
 
   def failure(result)
-    return error!('Forbidden', 403) if result['result.policy.default']&.failure?
-    return error!('Not Found', 404) if result['result.model']&.failure?
-    return error!(result[:errors][:message], result[:errors][:status]) if result[:errors]
-    error!(result['contract.default'].errors.full_messages.join(', '), 422)
+    return error('Forbidden', 403) if result['result.policy.default']&.failure?
+    return error('Not Found', 404) if result['result.model']&.failure?
+    return error(result[:errors][:message], result[:errors][:status]) if result[:errors]
+    error(result['contract.default'].errors.full_messages.join(', '), 422)
   end
 
-  def error!(msg, status = nil)
+  def error(msg, status = nil)
     raise RequestError.new(msg, status)
   end
 

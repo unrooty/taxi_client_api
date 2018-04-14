@@ -7,7 +7,8 @@ module Resolvers
       type !types[Types::OrderType]
 
       def call(_obj, _args, ctx)
-        handle(Order::Index.call(current_user: ctx[:current_user]))
+        authenticate_request!(ctx[:headers])
+        handle(Order::Index.call(current_user: current_user))
       end
     end
   end

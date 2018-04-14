@@ -20,7 +20,7 @@ module Account
     end
 
     def send_email_to_user(_options, current_user:, **)
-      UserMailer.User_deactivated(current_user).deliver
+      UserMailer.account_deactivated(current_user).deliver
     end
   end
 end

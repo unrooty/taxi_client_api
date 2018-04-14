@@ -5,7 +5,7 @@ module Account
     step Model(User, :new)
     step self::Contract::Build(constant: Account::Contract::Register)
     step Wrap(SequelTransaction) {
-      step self::Contract::Validate(key: :user)
+      step self::Contract::Validate(key: :account)
       step :add_confirm_token_to_user
       step self::Contract::Persist()
       step :send_confirmation_email

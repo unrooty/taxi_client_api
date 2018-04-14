@@ -9,8 +9,9 @@ module Resolvers
       type Types::OrderType
 
       def call(_org, args, ctx)
+        authenticate_request!(ctx[:headers])
         handle(Order::Show.call(params: args.to_h,
-                                current_user: ctx[:current_user]))
+                                current_user: current_user))
       end
     end
   end

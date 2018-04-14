@@ -2,8 +2,8 @@
 
 module Authentication
   module AuthHelpers
-    def authenticate_user!
-      token_present?
+    def authenticate_request!(headers)
+      token_present?(headers)
       token_expired?
       check_account
     end
@@ -14,9 +14,9 @@ module Authentication
       @user
     end
 
-    def token_present?
-      if request.headers['Access-Token'].present?
-        return @token = request.headers['Access-Token']
+    def token_present?(headers)
+      if headers['Access-Token'].present?
+        return @token = headers['Access-Token']
       end
       raise Handler::RequestError.new('Token absent', 422)
     end
